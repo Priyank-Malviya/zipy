@@ -83,7 +83,7 @@ def zipExtract(zipfile, output, verbose):
             os._exit(os.EX_OK)
 
     except FileExistsError:
-        print(colored("Please Provide a valid zip file",'red'))
+        print(colored("The directory that needs to be created its already Exists Please remove it and try again",'red'))
         sys.exit(2)
 
     except:
