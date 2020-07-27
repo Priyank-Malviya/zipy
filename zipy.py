@@ -53,7 +53,7 @@ def load_animation(str):
 
 
 # function used for extract zip file
-def zipExtract(zipfile, output, verbos):
+def zipExtract(zipfile, output, verbose):
     try:
         # split the text of zip file to create a fiolder same as zip file name
         name = os.path.splitext(zipfile)
@@ -66,8 +66,8 @@ def zipExtract(zipfile, output, verbos):
                 # used for change the directory to the created directory
                 os.chdir(output)
 
-                #checking the verbos is enable or not
-                if verbos: zip.printdir()
+                #checking the verbose is enable or not
+                if verbose: zip.printdir()
                 #create a thread to run the animation on the console
                 thread1 = threading.Thread(target = load_animation, args=("extracting your files",))
                 thread1.start()
@@ -97,7 +97,7 @@ def get_all_file_paths(directory):
     return file_paths
 
 # function used for generate the zip file
-def zipBind(directory, verbos):
+def zipBind(directory, verbose):
 
     # checking the path so if it has / then it should remove
     if directory[-1] == "/":
@@ -109,7 +109,7 @@ def zipBind(directory, verbos):
     file_paths = get_all_file_paths(directory)
 
     # print the files in the directory
-    if verbos:
+    if verbose:
         print(colored("Following files will be zipped: ",'yellow'))
         for file_name in file_paths:
             print(file_name)
@@ -154,7 +154,7 @@ def zipDetails(file):
 
 # main function
 def main():
-    help = "Please Provide valid Option and file \nUsage- ./zipy.py Options file \n-e : \"For Extracting a zip file\" \n-b : \"To create a zip file\" \n-d : \"To get the full details about the zip file\" \n-v : \"Optional Parameter to get details(Please add verbos option at the last)\" \nEx- \t./zipy.py -b ~/example -v\n\t./zipy.py -e example.zip"
+    help = "Please Provide valid Option and file \nUsage- ./zipy.py Options file \n-e : \"For Extracting a zip file\" \n-b : \"To create a zip file\" \n-d : \"To get the full details about the zip file\" \n-v : \"Optional Parameter to get details(Please add verbose option at the last)\" \nEx- \t./zipy.py -b ~/example -v\n\t./zipy.py -e example.zip"
     if len(sys.argv) < 3:
         print("\033[1;32m{}".format(help))
         sys.exit(1)
@@ -162,24 +162,24 @@ def main():
     file = sys.argv[2]
     name = os.path.splitext(file)
 
-    verbos_op = None
-    verbos = False
+    verbose_op = None
+    verbose = False
 
     if len(sys.argv) == 4:
-        verbos_op = sys.argv[3]
+        verbose_op = sys.argv[3]
 
-    if verbos_op == "-v":
-        verbos = True
-    if len(sys.argv) == 4 and verbos_op != "-v":
+    if verbose_op == "-v":
+        verbose = True
+    if len(sys.argv) == 4 and verbose_op != "-v":
         print("\033[1;32m{}".format(help))
         sys.exit(1)
 
     if option == "-e":
-        zipThread = threading.Thread(target = zipExtract, args = (file,name[0],verbos,))
+        zipThread = threading.Thread(target = zipExtract, args = (file,name[0],verbose,))
         zipThread.start()
 
     elif option == "-b":
-        bindThread = threading.Thread(target = zipBind, args = (file,verbos,))
+        bindThread = threading.Thread(target = zipBind, args = (file,verbose,))
         bindThread.start()
 
     elif option == "-d":
