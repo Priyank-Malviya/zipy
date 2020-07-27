@@ -16,6 +16,7 @@ sudo chmod +x zipy.py
 
 ## Usage:
 ./zipy.py -e example.zip
+
 ./zip.py -b ~/example/ -v
 
 
