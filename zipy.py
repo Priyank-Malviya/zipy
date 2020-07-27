@@ -80,7 +80,11 @@ def zipExtract(zipfile, output, verbose):
                 os._exit(os.EX_OK)
         else:
             print(colored("Please provide a valid zip file", 'red'))
-            sys.exit(2)
+            os._exit(os.EX_OK)
+
+    except FileExistsError:
+        print(colored("Please Provide a valid zip file",'red'))
+        sys.exit(2)
 
     except:
         print(colored("Please Provide a valid zip file",'red'))
@@ -100,36 +104,44 @@ def get_all_file_paths(directory):
 def zipBind(directory, verbose):
 
     # checking the path so if it has / then it should remove
-    if directory[-1] == "/":
-        dir = directory[:-1]
-    else: dir = directory
+    name = os.path.splitext(directory)
+    #print(name)
 
-    # split the name to create the zip file
-    name = os.path.split(dir)
-    file_paths = get_all_file_paths(directory)
+    #checking the file if it is not already zipped
+    if name[1] != '.zip':
+        if directory[-1] == "/":
+            dir = directory[:-1]
+        else: dir = directory
 
-    # print the files in the directory
-    if verbose:
-        print(colored("Following files will be zipped: ",'yellow'))
-        for file_name in file_paths:
-            print(file_name)
+        # split the name to create the zip file
+        name = os.path.split(dir)
+        file_paths = get_all_file_paths(directory)
+
+        # print the files in the directory
+        if verbose:
+            print(colored("Following files will be zipped: ",'yellow'))
+            for file_name in file_paths:
+                print(file_name)
 
 
-    file_name = name[1]
+        file_name = name[1]
 
-    # create and open zip file in write mode
-    with ZipFile("{}.zip".format(file_name), 'w') as zip:
+        # create and open zip file in write mode
+        with ZipFile("{}.zip".format(file_name), 'w') as zip:
 
-        # create thread to start animation
-        thread1 = threading.Thread(target = load_animation, args=("generating zip files",))
-        thread1.start()
+            # create thread to start animation
+            thread1 = threading.Thread(target = load_animation, args=("generating zip files",))
+            thread1.start()
 
-        # write all the files in a zip file
-        for file in file_paths:
-            zip.write(file)
+            # write all the files in a zip file
+            for file in file_paths:
+                zip.write(file)
 
-    print(colored('\nAll files zipped successfully :) \"File Name: {}.zip\"'.format(file_name), 'green'))
-    os._exit(os.EX_OK)
+        print(colored('\nAll files zipped successfully :) \"File Name: {}.zip\"'.format(file_name), 'green'))
+        os._exit(os.EX_OK)
+    else:
+        print(colored("Please do not provide already zipped file",'red'))
+        os._exit(os.EX_OK)
 
 # function for showing all the details about files in a zip file
 def zipDetails(file):
